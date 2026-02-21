@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>BekalPay - Cloud Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-body: #f4f7f6; --surface: #ffffff;
+            --primary: #0B132B; --accent: #4361EE; --accent-glow: rgba(67, 97, 238, 0.15);
+            --success: #06D6A0; --danger: #EF476F; --warning: #FFD166;
+            --text-dark: #1A1A1A; --text-gray: #6C757D; --border-light: #E9ECEF;
+            --radius-xl: 32px; --radius-lg: 24px; --radius-md: 16px; --radius-sm: 12px;
+            --shadow-soft: 0 8px 20px rgba(0,0,0,0.03);
+            --shadow-float: 0 15px 35px rgba(11, 19, 43, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-dark); display: flex; justify-content: center; overflow-x: hidden; }
+        
+        /* CONTAINER UTAMA */
+        .app-container { width: 100%; max-width: 480px; background: var(--bg-body); min-height: 100vh; position: relative; padding-bottom: 120px; display: none; }
+        
+        /* AUTHENTICATION SCREEN (LOGIN/REGISTER) */
+        .auth-container { width: 100%; max-width: 480px; background: var(--primary); min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; padding: 24px; color: white; overflow: hidden; }
+        .auth-container::before { content: ''; position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; background: radial-gradient(circle, var(--accent-glow) 0%, rgba(11,19,43,0) 70%); z-index: 0; }
+        .auth-content { position: relative; z-index: 1; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); padding: 40px 24px; border-radius: var(--radius-xl); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow-float); }
+        .auth-logo { text-align: center; margin-bottom: 30px; }
+        .auth-logo i { font-size: 3.5rem; color: var(--accent); margin-bottom: 10px; }
+        .auth-logo h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+        .auth-logo p { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 5px; }
+        
+        .auth-input-group { margin-bottom: 16px; position: relative; }
+        .auth-input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); font-size: 1.2rem; }
+        .auth-input { width: 100%; padding: 16px 16px 16px 48px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); font-size: 1rem; color: white; outline: none; transition: 0.3s; }
+        .auth-input:focus { border-color: var(--accent); background: rgba(0,0,0,0.4); }
+        .auth-input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .auth-btn { width: 100%; padding: 18px; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 800; color: white; background: var(--accent); cursor: pointer; transition: 0.2s; margin-top: 10px; box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3); }
+        .auth-btn:active { transform: scale(0.97); }
+        .auth-switch { text-align: center; margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+        .auth-switch span { color: var(--accent); font-weight: 700; cursor: pointer; }
+        
+        /* GLOBAL LOADER */
+        #global-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; transition: 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* HEADER & DASHBOARD */
+        .header-bg { background: var(--primary); padding: 50px 24px 80px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; color: white; position: relative; overflow: hidden; }
+        .header-bg::before { content: ''; position: absolute; top: -50%; left: -20%; width: 140%; height: 140%; background: radial-gradient(circle, var(--accent-glow) 0%, rgba(11,19,43,0) 70%); z-index: 0; }
+        .header-content { position: relative; z-index: 1; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .greeting-box p { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
+        .greeting-box h1 { font-size: 1.2rem; font-weight: 700; }
+        
+        .guide-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3); font-size: 1.4rem; color: white; cursor: pointer; transition: 0.3s; margin-left: 10px; }
+        .guide-btn:active { transform: scale(0.9); background: var(--accent); }
+        .logout-btn { background: rgba(239, 71, 111, 0.2); border-color: rgba(239, 71, 111, 0.4); color: #FFA8B6; }
+        .logout-btn:active { background: var(--danger); color: white; }
+        
+        .dual-balance { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
+        .bal-box { background: rgba(255,255,255,0.1); padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
+        .bal-box p { font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
+        .bal-box h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; }
+        .bal-box.ekstra { background: linear-gradient(135deg, rgba(6, 214, 160, 0.1), rgba(6, 214, 160, 0.05)); border-color: rgba(6, 214, 160, 0.3); }
+        .bal-box.ekstra h2 { color: #A7F3D0; }
+
+        /* ACTIONS */
+        .actions-card { display: flex; justify-content: space-between; background: var(--surface); margin: -40px 24px 25px; padding: 20px 16px; border-radius: var(--radius-lg); box-shadow: var(--shadow-float); position: relative; z-index: 10; border: 1px solid var(--border-light); }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; flex: 1; }
+        .action-icon { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: 0.3s; }
+        .action-item:active .action-icon { transform: scale(0.9); }
+        .action-item span { font-size: 0.7rem; font-weight: 800; color: var(--text-dark); text-align: center; line-height: 1.2; }
+        .ic-bekal { background: #EEF2FF; color: var(--accent); } .ic-income { background: #E6FFF6; color: #059669; } .ic-pay { background: #FFF0F3; color: var(--danger); } .ic-vault { background: #FFFBEB; color: var(--warning); } 
+
+        .section { padding: 0 24px; margin-bottom: 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-header h3 { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
+
+        /* POCKETS & VAULT */
+        .pocket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .pocket { background: var(--surface); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); border: 1px solid var(--border-light); transition: 0.2s; cursor: pointer; }
+        .pocket:active { transform: scale(0.97); }
+        .pocket i { font-size: 1.6rem; color: var(--text-gray); margin-bottom: 12px; display: block; }
+        .pocket p { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; margin-bottom: 4px; }
+        .pocket h4 { font-size: 1.15rem; font-weight: 800; color: var(--text-dark); }
+        
+        .vault-banner { background: var(--primary); border-radius: var(--radius-md); padding: 16px 20px; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: var(--shadow-soft); }
+        .vault-banner h4 { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 4px; font-weight: 600; }
+        .vault-banner h2 { font-size: 1.5rem; font-weight: 800; }
+        .vault-banner i { font-size: 2.5rem; color: var(--warning); opacity: 0.8; }
+
+        /* NAV DOCK */
+        .nav-dock { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 48px); max-width: 400px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); display: flex; justify-content: space-around; padding: 16px 8px; border-radius: 32px; box-shadow: var(--shadow-float); z-index: 50; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-gray); cursor: pointer; flex: 1; position: relative; }
+        .nav-item i { font-size: 1.5rem; transition: 0.3s; }
+        .nav-item span { font-size: 0.7rem; font-weight: 700; opacity: 0; transform: translateY(5px); transition: 0.3s; position: absolute; bottom: -8px; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { transform: translateY(-8px); font-weight: bold; }
+        .nav-item.active span { opacity: 1; transform: translateY(0); }
+
+        /* PAGES */
+        .page { display: none; animation: slideUp 0.4s ease forwards; opacity: 0; transform: translateY(20px); }
+        .page.active { display: block; }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        .page-header { padding: 40px 24px 20px; }
+        .page-header h2 { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .page-header p { font-size: 0.9rem; color: var(--text-gray); line-height: 1.4; }
+        
+        .form-card { background: var(--surface); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); border: 1px solid var(--border-light); }
+        .input-group { margin-bottom: 20px; width: 100%; }
+        .input-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .input-wrapper i { position: absolute; left: 16px; color: var(--text-gray); font-size: 1.2rem; }
+        .input-field { width: 100%; padding: 16px 16px 16px 48px; background: var(--bg-body); border: 1.5px solid var(--border-light); border-radius: var(--radius-md); font-size: 1rem; font-weight: 700; color: var(--primary); outline: none; transition: 0.3s; appearance: none; }
+        .input-field:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 4px var(--accent-glow); }
+        .input-field.readonly { background: #F8F9FA; color: var(--text-gray); border-color: transparent; }
+        
+        .btn-main { width: 100%; padding: 18px; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 800; color: white; background: var(--primary); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-magic { width: 100%; padding: 14px; border: 1.5px dashed var(--accent); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 800; color: var(--accent); background: rgba(67, 97, 238, 0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px; }
+
+        /* SISA BEKAL PANEL & MARQUEE */
+        .sisa-panel { background: #FFFBEB; border: 1px solid #FDE68A; padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; animation: fadeIn 0.4s; overflow: hidden; }
+        .sisa-panel label { color: #92400E !important; margin-bottom: 4px; }
+        .marquee-container { width: 100%; overflow: hidden; white-space: nowrap; margin-bottom: 12px; position: relative; }
+        .marquee-content { display: inline-block; font-size: 0.75rem; color: #92400E; font-weight: 600; padding-left: 100%; animation: marquee 12s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* TIMELINE */
+        .timeline-container { padding: 0 24px; }
+        .cycle-block { margin-bottom: 30px; }
+        .cycle-header { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 16px 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); border: 1px solid var(--border-light); cursor: pointer; margin-bottom: 15px; }
+        .cycle-header h4 { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
+        .cycle-content { display: none; padding-left: 10px; }
+        .cycle-block.open .cycle-content { display: block; animation: fadeIn 0.3s ease; }
+        .timeline { border-left: 2px solid #E2E8F0; padding-left: 20px; position: relative; margin-top: 10px; }
+        .tl-item { position: relative; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .tl-item:last-child { margin-bottom: 0; }
+        .tl-item::before { content: ''; position: absolute; left: -26px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--border-light); border: 2px solid var(--bg-body); }
+        .tl-item.in::before { background: var(--success); } .tl-item.out::before { background: var(--danger); } .tl-item.save::before { background: var(--accent); }
+        .tl-info { flex: 1; padding-right: 10px; }
+        .tl-info h5 { font-size: 0.95rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; line-height: 1.3; }
+        .tl-info p { font-size: 0.75rem; color: var(--text-gray); font-weight: 500; line-height: 1.4; }
+        .tl-amount { text-align: right; min-width: 80px; }
+        .tl-amount h5 { font-size: 0.95rem; font-weight: 800; }
+        .btn-batal { font-size: 0.7rem; color: var(--danger); cursor: pointer; display: inline-block; margin-top: 6px; font-weight: 700; padding: 4px 8px; background: #FFF0F3; border-radius: 6px; transition: 0.2s; border: 1px solid rgba(239, 71, 111, 0.2); }
+        .btn-batal:active { transform: scale(0.9); }
+
+        /* BOTTOM SHEETS */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 43, 0.6); backdrop-filter: blur(4px); z-index: 99; opacity: 0; visibility: hidden; transition: 0.4s; }
+        .overlay.active { opacity: 1; visibility: visible; }
+        .sheet { position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--surface); border-top-left-radius: 32px; border-top-right-radius: 32px; padding: 24px 24px 40px; z-index: 100; transition: bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
+        .sheet.active { bottom: 0; }
+        .sheet-handle { width: 40px; height: 5px; background: var(--border-light); border-radius: 10px; margin: 0 auto 24px; }
+        .sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .sheet-head h2 { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+        .btn-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-body); border: none; font-weight: bold; cursor: pointer; color: var(--text-gray); }
+
+        .info-box { background: #F8F9FA; border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; border-left: 4px solid var(--accent); }
+        .info-box h4 { font-size: 0.85rem; color: var(--primary); margin-bottom: 4px; }
+        .info-box p { font-size: 0.8rem; color: var(--text-gray); line-height: 1.5; }
+        .fallback-ui { display: none; margin-top: -10px; margin-bottom: 20px; padding: 16px; background: #FFF0F3; border: 1px dashed var(--danger); border-radius: var(--radius-md); animation: fadeIn 0.3s; }
+        .fallback-ui p { font-size: 0.8rem; color: #BE123C; margin-bottom: 10px; font-weight: 600; }
+        .guide-step { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light); }
+        .guide-step:last-child { border-bottom: none; }
+        .guide-step h4 { font-size: 0.95rem; color: var(--primary); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .guide-step h4 i { color: var(--accent); font-size: 1.2rem; }
+        .guide-step p { font-size: 0.85rem; color: var(--text-gray); line-height: 1.6; }
+
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--primary); color: white; padding: 14px 24px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; opacity: 0; visibility: hidden; transition: 0.4s; z-index: 1000; box-shadow: var(--shadow-float); display: flex; align-items: center; gap: 8px; }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
+    </style>
+</head>
+<body>
+
+<div id="global-loader">
+    <div class="spinner"></div>
+    <h3 style="font-size:1rem; font-weight:700; letter-spacing:1px;">Menghubungkan ke Cloud...</h3>
+</div>
+
+<div class="auth-container" id="auth-screen" style="display: none;">
+    <div class="auth-content">
+        <div class="auth-logo">
+            <i class="ph-fill ph-wallet"></i>
+            <h1>BekalPay Cloud</h1>
+            <p>Manajemen Finansial Mahasiswa Cerdas</p>
+        </div>
+        
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <h3 id="auth-title" style="margin-bottom: 20px; font-size:1.1rem; text-align:center;">Masuk ke Akun Anda</h3>
+            
+            <div class="auth-input-group">
+                <i class="ph ph-user"></i>
+                <input type="text" id="auth-username" class="auth-input" placeholder="Nama Panggilan / Username" required autocomplete="off">
+            </div>
+            
+            <div class="auth-input-group">
+                <i class="ph ph-lock-key"></i>
+                <input type="password" id="auth-pin" class="auth-input" placeholder="PIN Rahasia (Minimal 6 Angka)" required autocomplete="off" minlength="6">
+            </div>
+            
+            <button type="submit" class="auth-btn" id="auth-submit-btn">Masuk Sekarang</button>
+            
+            <div class="auth-switch">
+                <span id="auth-toggle-text">Belum punya akun? <b>Daftar Disini</b></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="app-container" id="main-app">
+    <div id="page-home" class="page active">
+        <div class="header-bg">
+            <div class="header-content">
+                <div class="top-bar">
+                    <div class="greeting-box"><p id="time-greeting">Halo,</p><h1 id="user-display-name">Tuan Muda</h1></div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="guide-btn" onclick="openSheet('sheet-guide')"><i class="ph ph-question"></i></div>
+                        <div class="guide-btn logout-btn" onclick="logoutFirebase()"><i class="ph ph-sign-out"></i></div>
+                    </div>
+                </div>
+                
+                <div class="dual-balance">
+                    <div class="bal-box"><p>Total Saldo Tersedia</p><h2 id="total-bekal">Rp 0</h2></div>
+                    <div class="bal-box ekstra"><p>Total Pendapatan</p><h2 id="pemasukan-ekstra">Rp 0</h2></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions-card">
+            <button class="action-item" onclick="switchTab('planner', document.querySelectorAll('.nav-item')[1])"><div class="action-icon ic-bekal"><i class="ph-fill ph-calendar-plus"></i></div><span>Terima<br>Bekal</span></button>
+            <button class="action-item" onclick="openSheet('sheet-income')"><div class="action-icon ic-income"><i class="ph-fill ph-briefcase"></i></div><span>Catat<br>Pendapatan</span></button>
+            <button class="action-item" onclick="openSheet('sheet-bayar')"><div class="action-icon ic-pay"><i class="ph-fill ph-paper-plane-tilt"></i></div><span>Bayar<br>Tagihan</span></button>
+            <button class="action-item" onclick="openSheet('sheet-brankas')"><div class="action-icon ic-vault"><i class="ph-fill ph-vault"></i></div><span>Akses<br>Brankas</span></button>
+        </div>
+
+        <div class="section" id="section-alokasi">
+            <div class="section-header"><h3>Rincian Kantong Aktif</h3></div>
+            <div class="pocket-grid">
+                <div class="pocket"><i class="ph-fill ph-wallet"></i><p>Dompet Utama</p><h4 id="k-utama">Rp 0</h4></div>
+                <div class="pocket"><i class="ph-fill ph-coffee"></i><p>Makan & Minum</p><h4 id="k-makan">Rp 0</h4></div>
+                <div class="pocket"><i class="ph-fill ph-gas-pump"></i><p>Operasional</p><h4 id="k-ops">Rp 0</h4></div>
+                <div class="pocket"><i class="ph-fill ph-shopping-bag"></i><p>Fleksibel</p><h4 id="k-flex">Rp 0</h4></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="vault-banner">
+                <div><h4>Total di Brankas Tabungan</h4><h2 id="tabungan-aktif">Rp 0</h2></div>
+                <i class="ph-fill ph-shield-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-planner" class="page">
+        <div class="page-header"><h2>Mulai Siklus Bekal</h2><p>Atur rumus dan durasi bekalmu. Sistem akan membagikan uangnya secara otomatis.</p></div>
+        <div class="section">
+            <div class="form-card">
+                <form id="form-budget" onsubmit="eksekusiBekalPlanner(event)">
+                    <div id="sisa-bekal-group" class="sisa-panel" style="display:none;">
+                        <label><i class="ph-fill ph-warning-circle"></i> Sisa Bekal Sebelumnya: Rp <span id="sisa-bekal-amount">0</span></label>
+                        <div class="marquee-container"><div class="marquee-content" id="sisa-bekal-detail">Detail: Rp 0</div></div>
+                        <div class="input-wrapper" style="width: 100%;">
+                            <i class="ph ph-broom"></i>
+                            <select id="action-sisa" class="input-field" style="padding-left:48px; width:100%; text-overflow: ellipsis;">
+                                <option value="akumulasi">Gabungkan Ke Dompet Utama (Bawa ke Siklus Baru)</option>
+                                <option value="brankas">Sapu Bersih & Masukkan Ke Brankas Tabungan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group"><label>Durasi Bekal Ini</label><div class="input-wrapper"><i class="ph ph-calendar"></i><select id="b-durasi" class="input-field calc-trigger" style="padding-left:48px;"><option value="7">1 Minggu (7 Hari)</option><option value="14">2 Minggu (14 Hari)</option><option value="30">1 Bulan (30 Hari)</option></select></div></div>
+                    <div class="input-group"><label>Total Uang Bekal Yg Diterima</label><div class="input-wrapper"><i class="ph ph-money"></i><input type="text" id="b-total" class="input-field format-rupiah calc-trigger" placeholder="Misal: 1.500.000" required></div><button type="button" class="btn-magic" onclick="autoPlanBudget()"><i class="ph-fill ph-magic-wand"></i> Auto-Bagi Sesuai Durasi</button></div>
+                    <div class="input-group"><label>Potong Tabungan Wajib</label><div class="input-wrapper"><i class="ph ph-vault"></i><input type="text" id="b-nabung" class="input-field format-rupiah calc-trigger" required></div></div>
+                    <div class="input-group"><label>Jatah Makan / Hari</label><div class="input-wrapper"><i class="ph ph-coffee"></i><input type="text" id="b-makan" class="input-field format-rupiah calc-trigger" required></div></div>
+                    <div class="input-group"><label>Transport & Tugas</label><div class="input-wrapper"><i class="ph ph-gas-pump"></i><input type="text" id="b-ops" class="input-field format-rupiah calc-trigger" required></div></div>
+                    <div class="input-group"><label>Sisa Fleksibel <span>(Otomatis)</span></label><div class="input-wrapper"><i class="ph ph-calculator"></i><input type="text" id="b-flex" class="input-field readonly format-rupiah" readonly></div></div>
+                    <button type="submit" class="btn-main" style="background:var(--success); color:var(--primary);"><i class="ph-bold ph-rocket-launch"></i> Mulai Siklus Baru</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-history" class="page">
+        <div class="page-header"><h2>Jejak Transaksi</h2><p>Riwayat pengeluaran yang dikelompokkan berdasarkan tanggal transaksi tersinkronisasi di Cloud.</p></div>
+        <div class="timeline-container" id="timeline-container"></div>
+    </div>
+
+    <nav class="nav-dock">
+        <div class="nav-item active" onclick="switchTab('home', this)"><i class="ph-fill ph-house"></i><span>Beranda</span></div>
+        <div class="nav-item" onclick="switchTab('planner', this)"><i class="ph-fill ph-sliders-horizontal"></i><span>Alokasi Bekal</span></div>
+        <div class="nav-item" onclick="switchTab('history', this)"><i class="ph-fill ph-clock-counter-clockwise"></i><span>Riwayat</span></div>
+    </nav>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSheets()"></div>
+
+<div class="sheet" id="sheet-guide">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head"><h2>Panduan Penggunaan</h2><button class="btn-close" onclick="closeSheets()">✕</button></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-calendar-plus"></i> 1. Terima Bekal Baru</h4><p>Setiap mendapat uang bekal dari orang tua, klik tombol ini. Pilih durasi bekal, masukkan nominal uang, dan klik <b>Auto-Bagi</b>.</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-briefcase"></i> 2. Catat Pendapatan</h4><p>Gunakan ini jika kamu mendapat uang hasil jerih payah sendiri (seperti joki tugas atau *freelance*).</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-paper-plane-tilt"></i> 3. Split Payment Pintar</h4><p>Saat bayar tagihan tapi uang di Kantong tersebut kurang, sistem otomatis bertanya kantong mana yang jadi "penalang".</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-broom"></i> 4. Sisa Bekal & Auto-Sweep</h4><p>Di akhir siklus, jika ada sisa uang receh di kantongmu, kamu bebas memilih ingin disapu bersih ke Brankas Tabungan atau digabung ke siklus bulan ini.</p></div>
+</div>
+
+<div class="sheet" id="sheet-income">
+    <div class="sheet-handle"></div><div class="sheet-head"><h2>Catat Pendapatan</h2><button class="btn-close" onclick="closeSheets()">✕</button></div>
+    <form onsubmit="handleIncome(event)">
+        <div class="input-group"><label>Sumber Penghasilan</label><div class="input-wrapper"><i class="ph ph-text-t"></i><input type="text" id="income-desc" class="input-field" required></div></div>
+        <div class="input-group"><label>Masukkan Ke Kantong</label><div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="income-pos" class="input-field" style="padding-left:48px;" required><option value="utama">Dompet Utama</option><option value="flex">Kantong Fleksibel</option></select></div></div>
+        <div class="input-group"><label>Nominal</label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="income-amount" class="input-field format-rupiah" required></div></div>
+        <button type="submit" class="btn-main" style="background:#059669;"><i class="ph-fill ph-plus-circle"></i> Tambah Pendapatan</button>
+    </form>
+</div>
+
+<div class="sheet" id="sheet-bayar">
+    <div class="sheet-handle"></div><div class="sheet-head"><h2>Catat Keluar</h2><button class="btn-close" onclick="closeSheets()">✕</button></div>
+    <form onsubmit="handleBayar(event)">
+        <div class="input-group"><label>Prioritas Potong Dari Kantong</label><div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="bayar-pos" class="input-field calc-bayar" style="padding-left:48px;" required><option value="makan">Kantong Makan</option><option value="ops">Kantong Operasional</option><option value="flex">Kantong Fleksibel</option><option value="utama">Dompet Utama</option></select></div></div>
+        <div class="input-group"><label>Keterangan</label><div class="input-wrapper"><i class="ph ph-receipt"></i><input type="text" id="bayar-desc" class="input-field" placeholder="Beli Nasi / Fotokopi" required></div></div>
+        <div class="input-group"><label>Nominal Pembayaran</label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="bayar-amount" class="input-field format-rupiah calc-bayar" required></div></div>
+        <div id="fallback-ui" class="fallback-ui"><p>⚠️ Saldo di kantong ini kurang! Ambil sisa kekurangannya dari mana?</p><div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="fallback-pos" class="input-field" style="padding-left:16px; background:white;"></select></div></div>
+        <button type="submit" class="btn-main" style="background:var(--danger);">Bayar Sekarang</button>
+    </form>
+</div>
+
+<div class="sheet" id="sheet-brankas">
+    <div class="sheet-handle"></div><div class="sheet-head"><h2>Manajemen Brankas</h2><button class="btn-close" onclick="closeSheets()">✕</button></div>
+    <form onsubmit="handleNabung(event)" style="margin-bottom: 30px; border-bottom: 1px solid var(--border-light); padding-bottom:20px;">
+        <h3 style="font-size:1rem; margin-bottom:15px; color:var(--success);">📥 Setor Ke Brankas</h3>
+        <div class="input-group"><label>Ambil Dana Dari</label><div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="nabung-pos" class="input-field" style="padding-left:16px;" required><option value="utama">Dompet Utama</option><option value="flex">Kantong Fleksibel</option><option value="makan">Kantong Makan</option><option value="ops">Kantong Operasional</option></select></div></div>
+        <div class="input-group"><label>Nominal Setor</label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="nabung-amount" class="input-field format-rupiah" placeholder="Misal: 50.000" required></div></div>
+        <button type="submit" class="btn-main" style="background:var(--success);"><i class="ph-bold ph-download-simple"></i> Setor Tabungan</button>
+    </form>
+    <form onsubmit="handleTarik(event)">
+        <h3 style="font-size:1rem; margin-bottom:15px; color:var(--text-dark);">📤 Cairkan Ke Dompet Utama</h3>
+        <div class="input-group"><label>Keterangan Pencairan</label><div class="input-wrapper"><i class="ph ph-text-t"></i><input type="text" id="tarik-desc" class="input-field" placeholder="Kebutuhan Darurat" required></div></div>
+        <div class="input-group"><label>Nominal Cair</label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="tarik-amount" class="input-field format-rupiah" required></div></div>
+        <button type="submit" class="btn-main" style="background:var(--primary);"><i class="ph-bold ph-upload-simple"></i> Cairkan Uang</button>
+    </form>
+</div>
+
+<div id="toast"><i class="ph-bold ph-info" style="font-size:1.2rem;"></i> <span id="toast-msg">Notifikasi</span></div>
+
+<script type="module">
+    // 1. Import SDK Firebase langsung dari server Google
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    // 2. Konfigurasi Rahasia Firebase milikmu
+    const firebaseConfig = {
+      apiKey: "AIzaSyAkoH0GL2m5Mc55rwaVg_VXCYqFdqyUSF4",
+      authDomain: "trackerbekal.firebaseapp.com",
+      projectId: "trackerbekal",
+      storageBucket: "trackerbekal.firebasestorage.app",
+      messagingSenderId: "102964876518",
+      appId: "1:102964876518:web:ad419366e27c0f6cab5727"
+    };
+
+    // 3. Menyalakan Mesin Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const dbFirestore = getFirestore(app);
+
+    // ==========================================
+    // BAGIAN AUTENTIKASI (LOGIN & REGISTER)
+    // ==========================================
+    let isRegisterMode = false;
+    let currentUserUid = null;
+
+    // Struktur Database Bawaan untuk User Baru
+    const defaultDbTemplate = {
+        cycle: 0, 
+        kantong: { utama: 0, makan: 0, ops: 0, flex: 0 },
+        tabungan: { aktif: 0, terkumpul: 0, terpakai: 0 }, 
+        pemasukan: { terkumpul: 0 }, 
+        history: [] 
+    };
+
+    // Global Variabel Database Tracker
+    window.db = null; 
+
+    // Hack: Ubah Username jadi Email
+    const getFakeEmail = (username) => `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@trackerbekal.com`;
+
+    document.getElementById('auth-toggle-text').addEventListener('click', () => {
+        isRegisterMode = !isRegisterMode;
+        document.getElementById('auth-title').innerText = isRegisterMode ? "Buat Akun Baru" : "Masuk ke Akun Anda";
+        document.getElementById('auth-submit-btn').innerText = isRegisterMode ? "Daftar Sekarang" : "Masuk Sekarang";
+        document.getElementById('auth-toggle-text').innerHTML = isRegisterMode ? "Sudah punya akun? <b>Masuk Disini</b>" : "Belum punya akun? <b>Daftar Disini</b>";
+    });
+
+    window.handleAuth = async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('auth-username').value;
+        const pin = document.getElementById('auth-pin').value;
+        const email = getFakeEmail(username);
+        
+        document.getElementById('auth-submit-btn').innerText = "Memproses...";
+
+        try {
+            if (isRegisterMode) {
+                // Proses Daftar
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pin);
+                // Buat Laci Baru di Firestore untuk user ini
+                await setDoc(doc(dbFirestore, "users", userCredential.user.uid), {
+                    username: username,
+                    data: defaultDbTemplate
+                });
+                alert("Registrasi Berhasil! Selamat datang.");
+            } else {
+                // Proses Login
+                await signInWithEmailAndPassword(auth, email, pin);
+            }
+        } catch (error) {
+            alert("Error: " + error.message.replace('Firebase:', ''));
+            document.getElementById('auth-submit-btn').innerText = isRegisterMode ? "Daftar Sekarang" : "Masuk Sekarang";
+        }
+    };
+
+    window.logoutFirebase = () => {
+        if(confirm("Yakin ingin keluar dari akun ini?")) {
+            signOut(auth);
+        }
+    };
+
+    // ==========================================
+    // LISTENER UTAMA (Mengecek Siapa yg Login)
+    // ==========================================
+    onAuthStateChanged(auth, async (user) => {
+        const loader = document.getElementById('global-loader');
+        const authScreen = document.getElementById('auth-screen');
+        const mainApp = document.getElementById('main-app');
+
+        if (user) {
+            // USER BERHASIL LOGIN
+            currentUserUid = user.uid;
+            authScreen.style.display = 'none';
+            loader.style.display = 'flex'; // Tampilkan loading saat narik data
+            
+            // Ambil data dari Brankas Awan (Firestore)
+            const docRef = doc(dbFirestore, "users", currentUserUid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                window.db = docSnap.data().data;
+                document.getElementById('user-display-name').innerText = docSnap.data().username || "Bosku";
+            } else {
+                // Jika entah kenapa datanya kosong, buatkan baru
+                window.db = defaultDbTemplate;
+                await setDoc(docRef, { username: "User", data: window.db });
+            }
+
+            // Jalankan UI Aplikasi
+            initAppUI();
+            
+            loader.style.display = 'none';
+            mainApp.style.display = 'block';
+        } else {
+            // USER BELUM LOGIN (Atau baru Logout)
+            currentUserUid = null;
+            window.db = null;
+            mainApp.style.display = 'none';
+            loader.style.display = 'none';
+            authScreen.style.display = 'flex';
+        }
+    });
+
+    // ==========================================
+    // FUNGSI SIMPAN KE CLOUD (Pengganti LocalStorage)
+    // ==========================================
+    window.saveData = async () => {
+        if (!currentUserUid || !window.db) return;
+        try {
+            const docRef = doc(dbFirestore, "users", currentUserUid);
+            await updateDoc(docRef, {
+                data: window.db
+            });
+            console.log("Auto-Save ke Cloud Berhasil!");
+        } catch (e) {
+            console.error("Gagal simpan ke Cloud: ", e);
+            alert("Koneksi terputus! Data gagal disimpan ke Cloud.");
+        }
+    };
+
+
+    // ==========================================
+    // LOGIKA APLIKASI UTAMA (Milikmu)
+    // ==========================================
+    function initAppUI() {
+        const formatRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+        const cleanNum = (str) => parseInt(str.toString().replace(/\./g, ''), 10) || 0;
+        const genID = () => Math.floor(Math.random() * 100000);
+        const getPosName = (code) => ({'utama':'Utama','makan':'Makan','ops':'Ops','flex':'Flex'})[code];
+
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let greet = 'Selamat Malam,';
+            if (hour >= 5 && hour < 11) greet = 'Selamat Pagi,';
+            else if (hour >= 11 && hour < 15) greet = 'Selamat Siang,';
+            else if (hour >= 15 && hour < 18) greet = 'Selamat Sore,';
+            document.getElementById('time-greeting').innerText = greet;
+        }
+
+        window.showToast = (msg) => {
+            document.getElementById("toast-msg").innerText = msg;
+            const t = document.getElementById("toast"); t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3500);
+        };
+
+        window.switchTab = (pageId, element) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active'); element.classList.add('active'); window.scrollTo(0,0);
+            
+            if(pageId === 'history') renderTimeline();
+            if(pageId === 'planner') checkLeftover();
+        };
+
+        window.openSheet = (id) => { document.getElementById('overlay').classList.add('active'); document.getElementById(id).classList.add('active'); };
+        window.closeSheets = () => { document.getElementById('overlay').classList.remove('active'); document.querySelectorAll('.sheet').forEach(s => s.classList.remove('active')); };
+
+        function checkLeftover() {
+            const k = window.db.kantong;
+            const totalSisa = k.makan + k.ops + k.flex;
+            const group = document.getElementById('sisa-bekal-group');
+            
+            if (totalSisa > 0) {
+                group.style.display = 'block';
+                document.getElementById('sisa-bekal-amount').innerText = formatRp(totalSisa).replace('Rp', '').trim();
+                let det = [];
+                if(k.makan > 0) det.push('Makan (' + formatRp(k.makan).replace(',00', '') + ')');
+                if(k.ops > 0) det.push('Ops (' + formatRp(k.ops).replace(',00', '') + ')');
+                if(k.flex > 0) det.push('Flex (' + formatRp(k.flex).replace(',00', '') + ')');
+                document.getElementById('sisa-bekal-detail').innerText = "Rincian Sisa: " + det.join(' | ');
+            } else {
+                group.style.display = 'none';
+            }
+        }
+
+        document.querySelectorAll('.calc-trigger').forEach(inp => { inp.addEventListener('input', calculatePlannerLive); });
+
+        window.autoPlanBudget = () => {
+            const total = cleanNum(document.getElementById('b-total').value);
+            const durasi = parseInt(document.getElementById('b-durasi').value) || 7;
+            if (total < 10000) return showToast("Masukkan Nominal min. Rp 10.000");
+            
+            const nabung = total * 0.20; 
+            const makanHari = Math.round(((total * 0.40) / durasi) / 1000) * 1000; 
+            const ops = total * 0.20;
+            
+            document.getElementById('b-nabung').value = formatRp(nabung).replace('Rp', '').trim();
+            document.getElementById('b-makan').value = formatRp(makanHari).replace('Rp', '').trim();
+            document.getElementById('b-ops').value = formatRp(ops).replace('Rp', '').trim();
+            calculatePlannerLive(); showToast("Algoritma Durasi Diterapkan!");
+        };
+
+        function calculatePlannerLive() {
+            const total = cleanNum(document.getElementById('b-total').value); 
+            const nabung = cleanNum(document.getElementById('b-nabung').value);
+            const makanHari = cleanNum(document.getElementById('b-makan').value); 
+            const ops = cleanNum(document.getElementById('b-ops').value);
+            const durasi = parseInt(document.getElementById('b-durasi').value) || 7;
+            const flex = total - nabung - (makanHari * durasi) - ops;
+            
+            const flexInput = document.getElementById('b-flex'); flexInput.value = formatRp(flex).replace('Rp', '').trim();
+            if (flex < 0) { flexInput.style.color = 'var(--danger)'; flexInput.value = `DEFISIT ${formatRp(Math.abs(flex))}`; } 
+            else { flexInput.style.color = 'var(--text-gray)'; }
+        }
+
+        window.eksekusiBekalPlanner = (e) => {
+            e.preventDefault();
+            const totalBekal = cleanNum(document.getElementById('b-total').value);
+            const durasi = parseInt(document.getElementById('b-durasi').value) || 7;
+            const nabung = cleanNum(document.getElementById('b-nabung').value);
+            const makanTotal = cleanNum(document.getElementById('b-makan').value) * durasi;
+            const ops = cleanNum(document.getElementById('b-ops').value);
+            const flex = totalBekal - nabung - makanTotal - ops;
+
+            if (flex < 0) return alert('Sisa Fleksibel Defisit (Minus)! Perbaiki rumusnya.');
+
+            const k = window.db.kantong;
+            const totalSisa = k.makan + k.ops + k.flex;
+            window.db.cycle++;
+            const cycleTitle = `Siklus ${window.db.cycle}`;
+
+            if (totalSisa > 0) {
+                const action = document.getElementById('action-sisa').value;
+                let det = [];
+                if(k.makan > 0) det.push(`Makan: ${formatRp(k.makan).replace('Rp', '').trim()}`);
+                if(k.ops > 0) det.push(`Ops: ${formatRp(k.ops).replace('Rp', '').trim()}`);
+                if(k.flex > 0) det.push(`Flex: ${formatRp(k.flex).replace('Rp', '').trim()}`);
+                const strDetail = det.join(', ');
+
+                if (action === 'brankas') {
+                    window.db.tabungan.aktif += totalSisa; window.db.tabungan.terkumpul += totalSisa;
+                    addHistory('Sapu Sisa Bekal ke Brankas', `Dari: ${strDetail}`, totalSisa, 'save', 'utama');
+                } else {
+                    window.db.kantong.utama += totalSisa;
+                    addHistory('Sisa Dibawa ke Siklus Baru', `Dari: ${strDetail} -> Masuk Utama`, totalSisa, 'in', 'utama');
+                }
+            }
+
+            window.db.kantong.makan = 0; window.db.kantong.ops = 0; window.db.kantong.flex = 0;
+            window.db.kantong.utama += nabung; window.db.kantong.makan += makanTotal; window.db.kantong.ops += ops; window.db.kantong.flex += flex;
+
+            addHistory(`${cycleTitle}: Tabungan`, `Durasi ${durasi} Hari`, nabung, 'in', 'utama');
+            addHistory(`${cycleTitle}: Uang Makan`, `Untuk ${durasi} Hari`, makanTotal, 'in', 'makan');
+            addHistory(`${cycleTitle}: Operasional`, `Durasi ${durasi} Hari`, ops, 'in', 'ops');
+            if(flex > 0) addHistory(`${cycleTitle}: Fleksibel`, 'Sisa Dana', flex, 'in', 'flex'); 
+
+            finishTx(e, `🚀 Siklus Baru ${durasi} Hari Tersimpan di Cloud!`); switchTab('home', document.querySelectorAll('.nav-item')[0]); checkLeftover();
+        };
+
+        window.handleIncome = (e) => {
+            e.preventDefault();
+            const desc = document.getElementById('income-desc').value; const pos = document.getElementById('income-pos').value;
+            const amt = cleanNum(document.getElementById('income-amount').value); if(!amt) return;
+            window.db.kantong[pos] += amt; window.db.pemasukan.terkumpul += amt; 
+            addHistory(`Catat Pendapatan: ${desc}`, `Masuk ke ${getPosName(pos)}`, amt, 'in', pos, true); 
+            finishTx(e, 'Pendapatan Tersimpan di Cloud!');
+        };
+
+        document.querySelectorAll('.calc-bayar').forEach(el => {
+            el.addEventListener('input', () => {
+                const pos = document.getElementById('bayar-pos').value;
+                const amt = cleanNum(document.getElementById('bayar-amount').value);
+                const fallbackUI = document.getElementById('fallback-ui');
+                const fallbackSel = document.getElementById('fallback-pos');
+                
+                if(amt > window.db.kantong[pos]) {
+                    fallbackUI.style.display = 'block'; fallbackSel.innerHTML = ''; 
+                    const pockets = {utama: 'Dompet Utama', makan: 'Kantong Makan', ops: 'Kantong Operasional', flex: 'Kantong Fleksibel'};
+                    let hasOptions = false;
+                    for(let key in pockets) {
+                        if(key !== pos && window.db.kantong[key] > 0) {
+                            fallbackSel.innerHTML += `<option value="${key}">${pockets[key]} (Sisa: ${formatRp(window.db.kantong[key]).replace(',00','')})</option>`;
+                            hasOptions = true;
+                        }
+                    }
+                    if(!hasOptions) fallbackSel.innerHTML = `<option value="">Tidak ada kantong lain dengan saldo</option>`;
+                } else { fallbackUI.style.display = 'none'; }
+            });
+        });
+
+        window.handleBayar = (e) => {
+            e.preventDefault();
+            const desc = document.getElementById('bayar-desc').value; const pos = document.getElementById('bayar-pos').value;
+            const amt = cleanNum(document.getElementById('bayar-amount').value); if(!amt) return;
+            
+            if(amt > window.db.kantong[pos]) {
+                const fallbackPos = document.getElementById('fallback-pos').value;
+                if(!fallbackPos) return alert("Gagal! Tidak ada kantong lain yang memiliki saldo untuk ditalangi.");
+                const shortfall = amt - window.db.kantong[pos];
+                if(window.db.kantong[fallbackPos] < shortfall) return alert(`Saldo gagal ditalangi! Gabungan kantong tidak mencukupi.`);
+                
+                const amt1 = window.db.kantong[pos]; 
+                window.db.kantong[pos] = 0; window.db.kantong[fallbackPos] -= shortfall; 
+                
+                if(amt1 > 0) addHistory(`Bayar Tagihan: ${desc}`, `Dikuras dari ${getPosName(pos)}`, amt1, 'out', pos);
+                addHistory(`Bayar: ${desc} (Kekurangan)`, `Ditalangi dari ${getPosName(fallbackPos)}`, shortfall, 'out', fallbackPos);
+                
+                document.getElementById('fallback-ui').style.display = 'none';
+                finishTx(e, 'Pembayaran Split Berhasil di Cloud!');
+            } else {
+                window.db.kantong[pos] -= amt; addHistory(`Bayar Tagihan: ${desc}`, `Dari Kantong ${getPosName(pos)}`, amt, 'out', pos); finishTx(e, 'Transaksi Tersimpan di Cloud!');
+            }
+        };
+
+        window.handleNabung = (e) => { e.preventDefault(); const pos = document.getElementById('nabung-pos').value; const amt = cleanNum(document.getElementById('nabung-amount').value); if(!amt) return; if(window.db.kantong[pos] < amt) return alert('Saldo kurang.'); window.db.kantong[pos] -= amt; window.db.tabungan.aktif += amt; window.db.tabungan.terkumpul += amt; addHistory('Setor Tabungan', `Dari ${getPosName(pos)}`, amt, 'save', pos); finishTx(e, 'Masuk Brankas Cloud!'); };
+        window.handleTarik = (e) => { e.preventDefault(); const amt = cleanNum(document.getElementById('tarik-amount').value); if(!amt) return; if(window.db.tabungan.aktif < amt) return alert('Saldo brankas kurang.'); window.db.tabungan.aktif -= amt; window.db.tabungan.terpakai += amt; window.db.kantong.utama += amt; addHistory(`Cairkan Tabungan: ${document.getElementById('tarik-desc').value}`, 'Masuk ke Dompet Utama', amt, 'withdraw', 'utama'); finishTx(e, 'Dicairkan!'); };
+        
+        function finishTx(e, msg) { window.saveData(); renderHome(); e.target.reset(); closeSheets(); showToast(msg); }
+
+        function addHistory(title, sub, amount, type, pocketId, isIncomeExtra = false) {
+            const now = new Date();
+            const dateGroupOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const dateGroup = now.toLocaleDateString('id-ID', dateGroupOptions); 
+            window.db.history.unshift({ id: genID(), title, sub, amount, type, pocketId, isIncomeExtra, date: now.toLocaleDateString('id-ID', {day:'numeric', month:'short'}), time: now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}), groupId: dateGroup });
+        }
+
+        window.undoTx = (id) => {
+            if(!confirm('Hapus jejak ini dari Cloud dan kembalikan saldonya?')) return;
+            const index = window.db.history.findIndex(t => t.id === id); if(index === -1) return; 
+            const t = window.db.history[index];
+            if(t.type === 'in') { window.db.kantong[t.pocketId] -= t.amount; if (t.isIncomeExtra) window.db.pemasukan.terkumpul -= t.amount; } 
+            else if (t.type === 'out') { window.db.kantong[t.pocketId] += t.amount; } 
+            else if (t.type === 'save') { window.db.kantong[t.pocketId] += t.amount; window.db.tabungan.aktif -= t.amount; window.db.tabungan.terkumpul -= t.amount; } 
+            else if (t.type === 'withdraw') { window.db.tabungan.aktif += t.amount; window.db.tabungan.terpakai -= t.amount; window.db.kantong.utama -= t.amount; }
+            window.db.history.splice(index, 1); window.saveData(); renderHome(); renderTimeline(); showToast('Dibatalkan & Tersinkron di Cloud');
+        };
+
+        function renderHome() {
+            const k = window.db.kantong;
+            const totalSemua = k.makan + k.ops + k.flex + k.utama;
+            document.getElementById('total-bekal').innerText = formatRp(totalSemua); 
+            document.getElementById('pemasukan-ekstra').innerText = formatRp(window.db.pemasukan.terkumpul);
+            document.getElementById('tabungan-aktif').innerText = formatRp(window.db.tabungan.aktif); 
+            document.getElementById('k-utama').innerText = formatRp(k.utama); 
+            document.getElementById('k-makan').innerText = formatRp(k.makan); 
+            document.getElementById('k-ops').innerText = formatRp(k.ops); 
+            document.getElementById('k-flex').innerText = formatRp(k.flex);
+        }
+
+        window.toggleCycle = (el) => { el.parentElement.classList.toggle('open'); };
+        
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container'); container.innerHTML = '';
+            if(window.db.history.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-gray);"><i class="ph ph-receipt" style="font-size:3rem; margin-bottom:10px;"></i><br>Belum ada jejak transaksi.</div>'; return; }
+            
+            const grouped = {}; 
+            window.db.history.forEach(tx => { if(!grouped[tx.groupId]) grouped[tx.groupId] = { list: [] }; grouped[tx.groupId].list.push(tx); });
+            
+            for (const [dateGroup, data] of Object.entries(grouped)) {
+                let listHTML = data.list.map(t => `
+                    <div class="tl-item ${t.type}">
+                        <div class="tl-info"><h5>${t.title}</h5><p>${t.time} | ${t.sub}</p></div>
+                        <div class="tl-amount">
+                            <h5 style="color:${t.type==='in'||t.type==='save'?'var(--success)':'var(--text-dark)'}">${t.type==='in'||t.type==='save'?'+':'-'}${formatRp(t.amount)}</h5>
+                            <div class="btn-batal" onclick="undoTx(${t.id})">Batalkan</div>
+                        </div>
+                    </div>`).join('');
+                const isFirst = Object.keys(grouped)[0] === dateGroup;
+                container.innerHTML += `<div class="cycle-block ${isFirst ? 'open' : ''}"><div class="cycle-header" onclick="toggleCycle(this)"><h4><i class="ph-fill ph-calendar-blank" style="margin-right:8px; color:var(--accent); vertical-align:middle;"></i>${dateGroup}</h4><i class="ph-bold ph-caret-down"></i></div><div class="cycle-content"><div class="timeline">${listHTML}</div></div></div>`;
+            }
+        }
+
+        setGreeting(); renderHome();
+    }
+</script>
+
+</body>
+</html>
