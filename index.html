@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BekalPay - Fast Cloud Edition</title>
+    <title>BekalPay - Cloud Edition V15</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -17,7 +17,6 @@
             --shadow-float: 0 10px 40px rgba(15, 23, 42, 0.08);
         }
 
-        /* PERBAIKAN PERFORMA 1: Hapus scrollbar & tap highlight */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-body); color: var(--text-dark); display: flex; justify-content: center; overflow-x: hidden; }
         
@@ -25,7 +24,6 @@
         
         /* AUTHENTICATION SCREEN */
         .auth-container { width: 100%; max-width: 480px; background: #0f172a; min-height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; padding: 24px; color: white; overflow: hidden; }
-        /* PERBAIKAN PERFORMA 2: Hapus blur & radial gradient berat */
         .auth-content { position: relative; z-index: 1; background: #1e293b; padding: 40px 24px; border-radius: var(--radius-xl); border: 1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow-float); }
         .auth-logo { text-align: center; margin-bottom: 35px; }
         .auth-logo i { font-size: 3.5rem; color: var(--accent); margin-bottom: 12px; }
@@ -92,6 +90,19 @@
         .vault-banner h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
         .vault-banner i { font-size: 3rem; color: var(--warning); opacity: 0.9; }
 
+        /* RADAR IMPIAN (BARU) */
+        .target-card { background: var(--surface); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); border: 1px solid var(--border-light); cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; }
+        .target-card:active { transform: scale(0.98); }
+        .target-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .target-header h4 { font-size: 1rem; font-weight: 800; color: var(--primary); }
+        .target-header .icon-box { background: var(--accent-glow); color: var(--accent); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .progress-bg { width: 100%; height: 10px; background: #e2e8f0; border-radius: 6px; margin-bottom: 10px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #60a5fa); border-radius: 6px; width: 0%; transition: width 1s cubic-bezier(0.25, 1, 0.5, 1); will-change: width; }
+        .target-stats { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: var(--text-gray); }
+        .target-stats .sisa { color: var(--danger); }
+        .target-msg { font-size: 0.8rem; color: var(--success); font-weight: 700; margin-top: 10px; display: flex; align-items: center; gap: 6px; background: #ecfdf5; padding: 8px; border-radius: 8px; }
+        .target-empty { text-align: center; padding: 15px 0; color: var(--text-gray); font-size: 0.85rem; font-weight: 600; }
+
         /* NAV DOCK */
         .nav-dock { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 48px); max-width: 400px; background: #ffffff; display: flex; justify-content: space-around; padding: 16px 8px; border-radius: var(--radius-xl); box-shadow: 0 -4px 20px rgba(0,0,0,0.06); border: 1px solid var(--border-light); z-index: 50; }
         .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-gray); cursor: pointer; flex: 1; position: relative; }
@@ -101,7 +112,7 @@
         .nav-item.active i { transform: translateY(-10px); font-weight: bold; }
         .nav-item.active span { opacity: 1; transform: translateY(0); }
 
-        /* PAGES - Hardware Accelerated */
+        /* PAGES */
         .page { display: none; opacity: 0; transform: translateY(15px); will-change: transform, opacity; }
         .page.active { display: block; animation: slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
@@ -127,10 +138,8 @@
         .btn-magic { width: 100%; padding: 16px; border: 1.5px dashed var(--accent); border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 800; color: var(--accent); background: var(--accent-glow); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; transition: 0.2s; }
         .btn-magic:active { transform: scale(0.97); }
 
-        /* SISA BEKAL PANEL */
         .sisa-panel { background: #fffbeb; border: 1px solid #fcd34d; padding: 18px; border-radius: var(--radius-md); margin-bottom: 24px; animation: fadeIn 0.3s; overflow: hidden; }
         .sisa-panel label { color: #b45309 !important; margin-bottom: 6px; font-size: 0.9rem; }
-        /* PERBAIKAN PERFORMA 3: Translate3d for GPU Acceleration */
         .marquee-container { width: 100%; overflow: hidden; white-space: nowrap; margin-bottom: 14px; position: relative; }
         .marquee-content { display: inline-block; font-size: 0.8rem; color: #b45309; font-weight: 700; padding-left: 100%; animation: marquee 12s linear infinite; will-change: transform; }
         @keyframes marquee { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(-100%,0,0); } }
@@ -147,9 +156,7 @@
         .tl-item { position: relative; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-start; }
         .tl-item:last-child { margin-bottom: 0; }
         .tl-item::before { content: ''; position: absolute; left: -31px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--border-light); border: 2px solid var(--bg-body); }
-        .tl-item.in::before { background: var(--success); } 
-        .tl-item.out::before { background: var(--danger); } 
-        .tl-item.save::before { background: var(--accent); }
+        .tl-item.in::before { background: var(--success); } .tl-item.out::before { background: var(--danger); } .tl-item.save::before { background: var(--accent); }
         .tl-info { flex: 1; padding-right: 12px; }
         .tl-info h5 { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; line-height: 1.3; }
         .tl-info p { font-size: 0.75rem; color: var(--text-gray); font-weight: 600; line-height: 1.4; }
@@ -158,7 +165,7 @@
         .btn-batal { font-size: 0.7rem; color: var(--danger); cursor: pointer; display: inline-block; margin-top: 6px; font-weight: 700; padding: 4px 10px; background: #fff1f2; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(244, 63, 94, 0.2); }
         .btn-batal:active { transform: scale(0.9); background: var(--danger); color: white; }
 
-        /* PERBAIKAN PERFORMA 4: Optimasi Bottom Sheet Transisi 60 FPS */
+        /* BOTTOM SHEETS */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; }
         .overlay.active { opacity: 1; visibility: visible; }
         .sheet { position: fixed; bottom: 0; left: 50%; transform: translate(-50%, 100%); width: 100%; max-width: 480px; background: var(--surface); border-top-left-radius: var(--radius-xl); border-top-right-radius: var(--radius-xl); padding: 24px 24px 40px; z-index: 100; will-change: transform; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
@@ -236,6 +243,12 @@
         <div class="section">
             <div class="vault-banner"><div><h4>Brankas Tabungan</h4><h2 id="tabungan-aktif">Rp 0</h2></div><i class="ph-fill ph-shield-check"></i></div>
         </div>
+
+        <div class="section">
+            <div class="section-header"><h3>Radar Impian 🎯</h3></div>
+            <div class="target-card" onclick="openSheet('sheet-target')" id="target-display">
+                </div>
+        </div>
     </div>
 
     <div id="page-planner" class="page">
@@ -246,7 +259,7 @@
                     <div id="sisa-bekal-group" class="sisa-panel" style="display:none;">
                         <label><i class="ph-fill ph-warning-circle"></i> Sisa Bekal Sebelumnya: Rp <span id="sisa-bekal-amount">0</span></label>
                         <div class="marquee-container"><div class="marquee-content" id="sisa-bekal-detail">Detail: Rp 0</div></div>
-                        <div class="input-wrapper" style="width: 100%;"><i class="ph ph-broom"></i><select id="action-sisa" class="input-field" style="padding-left:48px; width:100%; text-overflow: ellipsis;"><option value="akumulasi">Gabungkan Ke Dompet Utama (Bawa ke Siklus Baru)</option><option value="brankas">Sapu Bersih & Masukkan Ke Brankas Tabungan</option></select></div>
+                        <div class="input-wrapper" style="width: 100%;"><i class="ph ph-broom"></i><select id="action-sisa" class="input-field" style="padding-left:48px; width:100%;"><option value="akumulasi">Gabungkan Ke Dompet Utama (Bawa ke Siklus Baru)</option><option value="brankas">Sapu Bersih & Masukkan Ke Brankas Tabungan</option></select></div>
                     </div>
                     <div class="input-group"><label>Durasi Bekal Ini</label><div class="input-wrapper"><i class="ph ph-calendar"></i><select id="b-durasi" class="input-field calc-trigger" style="padding-left:48px;"><option value="7">1 Minggu (7 Hari)</option><option value="14">2 Minggu (14 Hari)</option><option value="30">1 Bulan (30 Hari)</option></select></div></div>
                     <div class="input-group"><label>Total Bekal Diterima <span class="input-hint">Ketik 1m atau 500k</span></label><div class="input-wrapper"><i class="ph ph-money"></i><input type="text" id="b-total" class="input-field format-rupiah calc-trigger" placeholder="Cth: 1m" required></div><button type="button" class="btn-magic" onclick="autoPlanBudget()"><i class="ph-fill ph-magic-wand"></i> Auto-Bagi Sesuai Durasi</button></div>
@@ -276,15 +289,24 @@
 
 <div class="sheet" id="sheet-guide">
     <div class="sheet-handle"></div><div class="sheet-head"><h2>Panduan Penggunaan</h2><button class="btn-close" onclick="closeSheets()"><i class="ph ph-x"></i></button></div>
-    <div class="guide-step"><h4><i class="ph-fill ph-lightning"></i> Mengetik Cepat (Baru!)</h4><p>Ketik <b>50k</b> maka otomatis jadi Rp 50.000, atau ketik <b>1m</b> untuk Rp 1.000.000.</p></div>
-    <div class="guide-step"><h4><i class="ph-fill ph-calendar-plus"></i> 1. Terima Bekal Baru</h4><p>Pilih durasi bekal, masukkan nominal uang, dan klik <b>Auto-Bagi</b>.</p></div>
-    <div class="guide-step"><h4><i class="ph-fill ph-briefcase"></i> 2. Sisa Pendapatan Dinamis</h4><p>Setiap uang ekstra yang kamu dapat akan tercatat di Beranda. Jika kamu menyetor ke brankas atau dipakai belanja, angka Pendapatan itu akan ikut berkurang otomatis.</p></div>
-    <div class="guide-step"><h4><i class="ph-fill ph-info"></i> 3. Contekan Kantong</h4><p>• <b>Kantong Makan:</b> Beli Beras, Galon, Sayur, Makanan Jadi.<br>• <b>Kantong Ops:</b> Bensin, Parkir, Print Tugas, Kuota.<br>• <b>Kantong Flex:</b> Skincare, Langganan Film, Jajan Pribadi.</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-target"></i> Radar Impian (Fitur Baru!)</h4><p>Klik kotak Radar Impian di beranda. Masukkan nama barang dan harga. Sistem otomatis memprediksi kapan kamu bisa beli barang itu pakai uang di Brankas.</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-lightning"></i> Mengetik Cepat</h4><p>Ketik <b>50k</b> maka otomatis jadi Rp 50.000, atau ketik <b>1m</b> untuk Rp 1.000.000.</p></div>
+    <div class="guide-step"><h4><i class="ph-fill ph-briefcase"></i> Sisa Pendapatan Dinamis</h4><p>Uang ekstra akan tercatat di Beranda. Jika disetor ke brankas atau dipakai belanja, angka Pendapatan itu akan ikut berkurang otomatis.</p></div>
+</div>
+
+<div class="sheet" id="sheet-target">
+    <div class="sheet-handle"></div><div class="sheet-head"><h2>Pasang Radar Impian</h2><button class="btn-close" onclick="closeSheets()"><i class="ph ph-x"></i></button></div>
+    <div class="info-box"><p>Sistem akan memprediksi sisa waktu menabungmu berdasarkan isi Brankas saat ini dan rencana nabungmu ke depannya.</p></div>
+    <form onsubmit="handleSetTarget(event)">
+        <div class="input-group"><label>Nama Barang / Impian</label><div class="input-wrapper"><i class="ph ph-star"></i><input type="text" id="target-nama" class="input-field" placeholder="Cth: Sepatu Compass / Beli Laptop" required></div></div>
+        <div class="input-group"><label>Harga Barang <span class="input-hint">Ketik 500k</span></label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="target-harga" class="input-field format-rupiah" required></div></div>
+        <div class="input-group"><label>Rencana Nabung per Siklus/Bulan</label><div class="input-wrapper"><i class="ph ph-chart-line-up"></i><input type="text" id="target-rutin" class="input-field format-rupiah" placeholder="Cth: 50k" required></div></div>
+        <button type="submit" class="btn-main" style="background:var(--accent);"><i class="ph-bold ph-crosshair"></i> Kunci Target</button>
+    </form>
 </div>
 
 <div class="sheet" id="sheet-income">
     <div class="sheet-handle"></div><div class="sheet-head"><h2>Catat Pendapatan</h2><button class="btn-close" onclick="closeSheets()"><i class="ph ph-x"></i></button></div>
-    <div class="info-box"><p>Uang ini masuk ke dompet pilihanmu dan mengubah <b>Sisa Pendapatan</b> di layar utama.</p></div>
     <form onsubmit="handleIncome(event)">
         <div class="input-group"><label>Sumber Penghasilan</label><div class="input-wrapper"><i class="ph ph-text-t"></i><input type="text" id="income-desc" class="input-field" placeholder="Cth: Hasil Joki" required></div></div>
         <div class="input-group"><label>Masukkan Ke Kantong</label><div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="income-pos" class="input-field" style="padding-left:48px;" required><option value="utama">Dompet Utama</option><option value="flex">Kantong Fleksibel</option></select></div></div>
@@ -299,7 +321,6 @@
         <div class="input-group">
             <label>Prioritas Potong Dari</label>
             <div class="input-wrapper"><i class="ph ph-caret-down" style="left:auto; right:16px;"></i><select id="bayar-pos" class="input-field calc-bayar" style="padding-left:48px;" required><option value="makan">Kantong Makan</option><option value="ops">Kantong Operasional</option><option value="flex">Kantong Fleksibel</option><option value="utama">Dompet Utama</option></select></div>
-            <p style="font-size:0.75rem; color:var(--text-gray); margin-top:8px; font-weight:600;"><i class="ph-fill ph-info"></i> Info: Beras ➔ Makan | Print/Bensin ➔ Ops | Skincare ➔ Flex</p>
         </div>
         <div class="input-group"><label>Keterangan</label><div class="input-wrapper"><i class="ph ph-receipt"></i><input type="text" id="bayar-desc" class="input-field" placeholder="Beli Nasi / Fotokopi" required></div></div>
         <div class="input-group"><label>Nominal <span class="input-hint">Ketik 25k</span></label><div class="input-wrapper"><i class="ph ph-currency-circle-dollar"></i><input type="text" id="bayar-amount" class="input-field format-rupiah calc-bayar" required></div></div>
@@ -347,8 +368,8 @@
     let isRegisterMode = false;
     let currentUserUid = null;
     
-    // DB Template Updated: Pemasukan punya "aktif" (yang berkurang saat dipakai) dan "terkumpul" (history)
-    const defaultDbTemplate = { cycle: 0, kantong: { utama: 0, makan: 0, ops: 0, flex: 0 }, tabungan: { aktif: 0, terkumpul: 0, terpakai: 0 }, pemasukan: { aktif: 0, terkumpul: 0 }, history: [] };
+    // DB Template Updated: Ditambah fitur `target`
+    const defaultDbTemplate = { cycle: 0, kantong: { utama: 0, makan: 0, ops: 0, flex: 0 }, tabungan: { aktif: 0, terkumpul: 0, terpakai: 0 }, pemasukan: { aktif: 0, terkumpul: 0 }, target: { nama: '', harga: 0, rutin: 0 }, history: [] };
     window.db = null; 
 
     const getFakeEmail = (username) => `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@trackerbekal.com`;
@@ -387,8 +408,10 @@
             const docSnap = await getDoc(doc(dbFirestore, "users", currentUserUid));
             if (docSnap.exists()) { 
                 window.db = docSnap.data().data; 
-                // Patch untuk user lama yang belum punya struktur pemasukan.aktif
-                if(window.db.pemasukan.aktif === undefined) { window.db.pemasukan.aktif = window.db.pemasukan.terkumpul || 0; }
+                // Patch DB lama ke versi V15
+                if(window.db.pemasukan.aktif === undefined) window.db.pemasukan.aktif = window.db.pemasukan.terkumpul || 0;
+                if(window.db.target === undefined) window.db.target = { nama: '', harga: 0, rutin: 0 };
+
                 document.getElementById('user-display-name').innerText = docSnap.data().username || "Bosku"; 
             } 
             else { window.db = defaultDbTemplate; await setDoc(doc(dbFirestore, "users", currentUserUid), { username: "User", data: window.db }); }
@@ -452,6 +475,83 @@
             if (flex < 0) { flexInput.style.color = 'var(--danger)'; flexInput.value = `DEFISIT ${formatRp(Math.abs(flex))}`; } else { flexInput.style.color = 'var(--text-gray)'; }
         }
 
+        // ==========================
+        // FUNGSI RADAR IMPIAN (BARU)
+        // ==========================
+        window.handleSetTarget = (e) => {
+            e.preventDefault();
+            const nama = document.getElementById('target-nama').value;
+            const harga = cleanNum(document.getElementById('target-harga').value);
+            const rutin = cleanNum(document.getElementById('target-rutin').value);
+            
+            window.db.target = { nama, harga, rutin };
+            finishTx(e, 'Radar Impian Berhasil Dikunci!');
+        }
+
+        function renderTargetImpian() {
+            const target = window.db.target;
+            const displayBox = document.getElementById('target-display');
+            
+            // Populate form edit kalau dibuka lagi
+            document.getElementById('target-nama').value = target.nama || '';
+            document.getElementById('target-harga').value = target.harga > 0 ? formatRp(target.harga).replace('Rp', '').trim() : '';
+            document.getElementById('target-rutin').value = target.rutin > 0 ? formatRp(target.rutin).replace('Rp', '').trim() : '';
+
+            if(!target || target.harga === 0) {
+                displayBox.innerHTML = `
+                    <div class="target-empty">
+                        <i class="ph ph-plus-circle" style="font-size:2rem; color:var(--accent); margin-bottom:8px; display:block;"></i>
+                        Belum ada target impian.<br>Klik disini untuk mengatur target!
+                    </div>`;
+                return;
+            }
+
+            const aktif = window.db.tabungan.aktif;
+            const harga = target.harga;
+            const rutin = target.rutin;
+            const sisa = harga - aktif;
+            
+            let percent = (aktif / harga) * 100;
+            if(percent > 100) percent = 100;
+            
+            let msgHTML = '';
+            if(sisa <= 0) {
+                msgHTML = `<div class="target-msg"><i class="ph-fill ph-check-circle"></i> Target Tercapai! Siap Checkout! 🎉</div>`;
+            } else {
+                if(rutin > 0) {
+                    const estimasi = Math.ceil(sisa / rutin);
+                    msgHTML = `<div class="target-msg" style="color:var(--accent); background:var(--accent-glow);"><i class="ph-fill ph-clock"></i> Tercapai dalam ~${estimasi} siklus nabung lagi!</div>`;
+                } else {
+                    msgHTML = `<div class="target-msg" style="color:var(--warning); background:#fffbeb;"><i class="ph-fill ph-info"></i> Tentukan nominal nabung rutin untuk melihat prediksi waktu.</div>`;
+                }
+            }
+
+            displayBox.innerHTML = `
+                <div class="target-header">
+                    <div>
+                        <p style="font-size:0.75rem; color:var(--text-gray); font-weight:700; margin-bottom:2px; text-transform:uppercase;">Target Saat Ini</p>
+                        <h4>${target.nama}</h4>
+                    </div>
+                    <div class="icon-box"><i class="ph-fill ph-star"></i></div>
+                </div>
+                <div class="progress-bg">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="target-stats">
+                    <span class="terkumpul">${formatRp(aktif)}</span>
+                    <span class="sisa">${sisa > 0 ? 'Kurang ' + formatRp(sisa) : 'Lunas!'}</span>
+                </div>
+                ${msgHTML}
+            `;
+
+            // Trigger animasi CSS progress bar setelah render
+            setTimeout(() => {
+                const fill = displayBox.querySelector('.progress-fill');
+                if(fill) fill.style.width = percent + '%';
+            }, 100);
+        }
+        // ==========================
+
         window.eksekusiBekalPlanner = (e) => {
             e.preventDefault(); const totalBekal = cleanNum(document.getElementById('b-total').value); const durasi = parseInt(document.getElementById('b-durasi').value) || 7; const nabung = cleanNum(document.getElementById('b-nabung').value); const makanTotal = cleanNum(document.getElementById('b-makan').value) * durasi; const ops = cleanNum(document.getElementById('b-ops').value); const flex = totalBekal - nabung - makanTotal - ops;
             if (flex < 0) return alert('Sisa Fleksibel Defisit (Minus)! Perbaiki rumusnya.');
@@ -464,30 +564,22 @@
 
         window.handleIncome = (e) => { 
             e.preventDefault(); const desc = document.getElementById('income-desc').value; const pos = document.getElementById('income-pos').value; const amt = cleanNum(document.getElementById('income-amount').value); if(!amt) return; 
-            window.db.kantong[pos] += amt; 
-            window.db.pemasukan.aktif = (window.db.pemasukan.aktif || 0) + amt; // Trik agar logikanya bisa berkurang
-            window.db.pemasukan.terkumpul += amt; 
-            addHistory(`Catat Pendapatan: ${desc}`, `Masuk ke ${getPosName(pos)}`, amt, 'in', pos, true); 
-            finishTx(e, 'Pendapatan Ditambahkan!'); 
+            window.db.kantong[pos] += amt; window.db.pemasukan.aktif = (window.db.pemasukan.aktif || 0) + amt; window.db.pemasukan.terkumpul += amt; 
+            addHistory(`Catat Pendapatan: ${desc}`, `Masuk ke ${getPosName(pos)}`, amt, 'in', pos, true); finishTx(e, 'Pendapatan Ditambahkan!'); 
         };
 
         document.querySelectorAll('.calc-bayar').forEach(el => { el.addEventListener('input', () => { const pos = document.getElementById('bayar-pos').value; const amt = cleanNum(document.getElementById('bayar-amount').value); const fallbackUI = document.getElementById('fallback-ui'); const fallbackSel = document.getElementById('fallback-pos'); if(amt > window.db.kantong[pos]) { fallbackUI.style.display = 'block'; fallbackSel.innerHTML = ''; const pockets = {utama: 'Dompet Utama', makan: 'Kantong Makan', ops: 'Kantong Operasional', flex: 'Kantong Fleksibel'}; let hasOptions = false; for(let key in pockets) { if(key !== pos && window.db.kantong[key] > 0) { fallbackSel.innerHTML += `<option value="${key}">${pockets[key]} (Sisa: ${formatRp(window.db.kantong[key]).replace(',00','')})</option>`; hasOptions = true; } } if(!hasOptions) fallbackSel.innerHTML = `<option value="">Tidak ada kantong lain dengan saldo</option>`; } else { fallbackUI.style.display = 'none'; } }); });
 
         window.handleBayar = (e) => { 
             e.preventDefault(); const desc = document.getElementById('bayar-desc').value; const pos = document.getElementById('bayar-pos').value; const amt = cleanNum(document.getElementById('bayar-amount').value); if(!amt) return; 
-            
-            // Logika Pendapatan Berkurang
             window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt);
-
             if(amt > window.db.kantong[pos]) { const fallbackPos = document.getElementById('fallback-pos').value; if(!fallbackPos) return alert("Gagal! Tidak ada kantong lain yang memiliki saldo untuk ditalangi."); const shortfall = amt - window.db.kantong[pos]; if(window.db.kantong[fallbackPos] < shortfall) return alert(`Saldo gagal ditalangi! Gabungan kantong tidak mencukupi.`); const amt1 = window.db.kantong[pos]; window.db.kantong[pos] = 0; window.db.kantong[fallbackPos] -= shortfall; if(amt1 > 0) addHistory(`Bayar Tagihan: ${desc}`, `Dikuras dari ${getPosName(pos)}`, amt1, 'out', pos); addHistory(`Bayar: ${desc} (Kekurangan)`, `Ditalangi dari ${getPosName(fallbackPos)}`, shortfall, 'out', fallbackPos); document.getElementById('fallback-ui').style.display = 'none'; finishTx(e, 'Pembayaran Split Berhasil!'); } 
             else { window.db.kantong[pos] -= amt; addHistory(`Bayar Tagihan: ${desc}`, `Dari Kantong ${getPosName(pos)}`, amt, 'out', pos); finishTx(e, 'Transaksi Tersimpan!'); } 
         };
 
         window.handleNabung = (e) => { 
             e.preventDefault(); const pos = document.getElementById('nabung-pos').value; const amt = cleanNum(document.getElementById('nabung-amount').value); if(!amt) return; if(window.db.kantong[pos] < amt) return alert('Saldo kurang.'); 
-            window.db.kantong[pos] -= amt; window.db.tabungan.aktif += amt; window.db.tabungan.terkumpul += amt; 
-            // Logika Pendapatan Berkurang (dipindah ke brankas)
-            window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt);
+            window.db.kantong[pos] -= amt; window.db.tabungan.aktif += amt; window.db.tabungan.terkumpul += amt; window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt);
             addHistory('Setor Tabungan', `Dari ${getPosName(pos)}`, amt, 'save', pos); finishTx(e, 'Masuk Brankas!'); 
         };
 
@@ -498,7 +590,19 @@
 
         window.undoTx = (id) => { if(!confirm('Hapus jejak ini dari Cloud dan kembalikan saldonya?')) return; const index = window.db.history.findIndex(t => t.id === id); if(index === -1) return; const t = window.db.history[index]; if(t.type === 'in') { window.db.kantong[t.pocketId] -= t.amount; if (t.isIncomeExtra) window.db.pemasukan.aktif -= t.amount; } else if (t.type === 'out') { window.db.kantong[t.pocketId] += t.amount; window.db.pemasukan.aktif += t.amount; } else if (t.type === 'save') { window.db.kantong[t.pocketId] += t.amount; window.db.tabungan.aktif -= t.amount; window.db.tabungan.terkumpul -= t.amount; window.db.pemasukan.aktif += t.amount; } else if (t.type === 'withdraw') { window.db.tabungan.aktif += t.amount; window.db.tabungan.terpakai -= t.amount; window.db.kantong.utama -= t.amount; } window.db.history.splice(index, 1); window.saveData(); renderHome(); renderTimeline(); showToast('Dibatalkan!'); };
 
-        function renderHome() { const k = window.db.kantong; document.getElementById('total-bekal').innerText = formatRp(k.makan + k.ops + k.flex + k.utama); document.getElementById('pemasukan-ekstra').innerText = formatRp(window.db.pemasukan.aktif || 0); document.getElementById('tabungan-aktif').innerText = formatRp(window.db.tabungan.aktif); document.getElementById('k-utama').innerText = formatRp(k.utama); document.getElementById('k-makan').innerText = formatRp(k.makan); document.getElementById('k-ops').innerText = formatRp(k.ops); document.getElementById('k-flex').innerText = formatRp(k.flex); }
+        function renderHome() { 
+            const k = window.db.kantong; 
+            document.getElementById('total-bekal').innerText = formatRp(k.makan + k.ops + k.flex + k.utama); 
+            document.getElementById('pemasukan-ekstra').innerText = formatRp(window.db.pemasukan.aktif || 0); 
+            document.getElementById('tabungan-aktif').innerText = formatRp(window.db.tabungan.aktif); 
+            document.getElementById('k-utama').innerText = formatRp(k.utama); 
+            document.getElementById('k-makan').innerText = formatRp(k.makan); 
+            document.getElementById('k-ops').innerText = formatRp(k.ops); 
+            document.getElementById('k-flex').innerText = formatRp(k.flex); 
+            
+            // Panggil render radar impian setiap kali home di refresh
+            renderTargetImpian();
+        }
 
         window.toggleCycle = (el) => { el.parentElement.classList.toggle('open'); };
         
