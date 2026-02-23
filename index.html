@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TrackerPay</title>
+    <title>BekalPay - Enterprise UI V20</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -23,6 +23,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; font-feature-settings: "tnum", "cv11"; }
         body { background-color: var(--bg-app); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
         
+        /* FADE TRANSITIONS UNTUK UX YANG LEBIH SMOOTH */
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         /* AUTH SCREEN */
         .auth-container { width: 100%; max-width: 480px; background: var(--surface); min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 32px; }
         .auth-logo { margin-bottom: 40px; } .auth-logo i { font-size: 3rem; color: var(--accent); margin-bottom: 16px; } .auth-logo h1 { font-size: 1.75rem; font-weight: 800; color: var(--primary); letter-spacing: -0.03em; margin-bottom: 8px; } .auth-logo p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
@@ -83,7 +87,7 @@
         .btn-magic { width: 100%; padding: 14px; border: 1.5px dashed var(--border); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; color: var(--text-main); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; transition: 0.2s; } .btn-magic:active { background: var(--bg-app); }
 
         .sisa-panel { background: #F8FAFC; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px; animation: fadeIn 0.3s; overflow: hidden; } .sisa-panel label { color: var(--text-main) !important; margin-bottom: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; } .marquee-container { width: 100%; overflow: hidden; white-space: nowrap; margin-bottom: 12px; position: relative; } .marquee-content { display: inline-block; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; padding-left: 100%; animation: marquee 12s linear infinite; will-change: transform; }
-        .timeline-container { padding: 0 24px; } .cycle-block { margin-bottom: 24px; } .cycle-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; margin-bottom: 16px; } .cycle-header h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; } .cycle-content { display: none; } .cycle-block.open .cycle-content { display: block; animation: fadeIn 0.3s ease; } .tl-item { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; } .tl-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 16px; flex-shrink: 0; } .tl-item.in .tl-icon { color: var(--success); background: #ECFDF5; } .tl-item.out .tl-icon { color: var(--primary); } .tl-item.save .tl-icon { color: var(--accent); background: var(--accent-soft); } .tl-info { flex: 1; } .tl-info h5 { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; } .tl-info p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; } .tl-amount { text-align: right; } .tl-amount h5 { font-size: 1rem; font-weight: 700; color: var(--primary); } .tl-amount.positive h5 { color: var(--success); } .btn-batal { font-size: 0.7rem; color: var(--danger); cursor: pointer; font-weight: 600; margin-top: 4px; display: inline-block; }
+        .timeline-container { padding: 0 24px; } .cycle-block { margin-bottom: 24px; } .cycle-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; margin-bottom: 16px; } .cycle-header h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; } .cycle-content { display: none; } .cycle-block.open .cycle-content { display: block; animation: fadeIn 0.3s ease; } .tl-item { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; } .tl-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-app); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 16px; flex-shrink: 0; } .tl-item.in .tl-icon { color: var(--success); background: #ECFDF5; } .tl-item.out .tl-icon { color: var(--primary); } .tl-item.save .tl-icon { color: var(--accent); background: var(--accent-soft); } .tl-info { flex: 1; } .tl-info h5 { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; } .tl-info p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; } .tl-amount { text-align: right; } .tl-amount h5 { font-size: 1rem; font-weight: 700; color: var(--primary); } .tl-amount.positive h5 { color: var(--success); } .btn-batal { font-size: 0.7rem; color: var(--danger); cursor: pointer; font-weight: 600; margin-top: 4px; display: inline-block; transition: 0.2s; } .btn-batal:active { opacity: 0.7; }
 
         /* SHEETS (BOTTOM FOR MOBILE) */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); } .overlay.active { opacity: 1; visibility: visible; }
@@ -96,11 +100,11 @@
         #toast { position: fixed; top: env(safe-area-inset-top, 20px); left: 50%; transform: translate(-50%, -100px); background: var(--primary); color: white; padding: 14px 24px; border-radius: 100px; font-size: 0.9rem; font-weight: 600; opacity: 0; visibility: hidden; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1000; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2); } #toast.show { transform: translate(-50%, 10px); opacity: 1; visibility: visible; }
         .btn-danger { background: #FFF1F2 !important; color: var(--danger) !important; border: 1px solid #FFE4E6 !important; } .btn-danger:active { background: #FFE4E6 !important; color: var(--danger) !important; } .flex-row { display: flex; gap: 12px; margin-top: 24px; }
 
-        /* SAAS DESKTOP RESPONSIVE ARCHITECTURE */
+        /* SAAS DESKTOP RESPONSIVE ARCHITECTURE (V20: Removed !important on display) */
         @media (min-width: 1024px) {
             body { justify-content: flex-start; }
             .auth-container { border-radius: var(--radius-xl); height: auto; min-height: 0; padding: 48px; box-shadow: var(--shadow-float); margin: auto; }
-            .app-container { max-width: 1200px; display: flex !important; flex-direction: row; padding-bottom: 0; min-height: 100vh; background: var(--surface); margin: 40px auto; border-radius: var(--radius-xl); overflow: hidden; }
+            .app-container { max-width: 1200px; flex-direction: row; padding-bottom: 0; min-height: 100vh; background: var(--surface); margin: 40px auto; border-radius: var(--radius-xl); overflow: hidden; }
             .nav-dock { position: relative; top: 0; left: 0; transform: none; width: 280px; height: auto; min-height: 100%; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding: 32px 20px; border-top: none; border-right: 1px solid var(--border); border-radius: 0; background: var(--surface); order: -1; z-index: 10; box-shadow: none; backdrop-filter: none; }
             .nav-brand { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 800; color: var(--primary); padding: 0 16px 40px; border-bottom: 1px solid var(--border-soft); width: 100%; margin-bottom: 24px; }
             .nav-brand i { color: var(--accent); font-size: 1.8rem; }
@@ -130,7 +134,7 @@
 
 <div id="global-loader"><div class="spinner"></div><h3>Memuat Cloud...</h3></div>
 
-<div class="auth-container" id="auth-screen" style="display: none;">
+<div class="auth-container fade-in" id="auth-screen" style="display: none;">
     <div class="auth-logo"><i class="ph-duotone ph-wallet"></i><h1>BekalPay.</h1><p>Financial management platform.</p></div>
     <form id="auth-form" onsubmit="handleAuth(event)">
         <div class="auth-input-group"><label id="auth-title">Sign In</label><div style="position:relative"><i class="ph ph-user"></i><input type="text" id="auth-username" class="auth-input" placeholder="Username" required autocomplete="off"></div></div>
@@ -303,14 +307,22 @@
     window.handleAuth = async (e) => {
         e.preventDefault(); const username = document.getElementById('auth-username').value; const pin = document.getElementById('auth-pin').value; const email = getFakeEmail(username); document.getElementById('auth-submit-btn').innerText = "Processing...";
         try { if (isRegisterMode) { const userCredential = await createUserWithEmailAndPassword(auth, email, pin); await setDoc(doc(dbFirestore, "users", userCredential.user.uid), { username: username, data: defaultDbTemplate }); } else { await signInWithEmailAndPassword(auth, email, pin); } } 
-        catch (error) { alert("Authentication Failed."); document.getElementById('auth-submit-btn').innerText = isRegisterMode ? "Register" : "Continue"; }
+        catch (error) { alert("Authentication Failed. Cek PIN Anda."); document.getElementById('auth-submit-btn').innerText = isRegisterMode ? "Register" : "Continue"; }
     };
-    window.logoutFirebase = () => { if(confirm("Sign out from session?")) signOut(auth); };
+    
+    window.logoutFirebase = () => { if(confirm("Keluar dari sesi ini?")) signOut(auth); };
 
+    // V20: Perbaikan logika hide/show container saat Login dan Logout
     onAuthStateChanged(auth, async (user) => {
-        const loader = document.getElementById('global-loader'); const authScreen = document.getElementById('auth-screen'); const mainApp = document.getElementById('main-app');
+        const loader = document.getElementById('global-loader'); 
+        const authScreen = document.getElementById('auth-screen'); 
+        const mainApp = document.getElementById('main-app');
+        
         if (user) {
-            currentUserUid = user.uid; authScreen.style.display = 'none'; loader.style.display = 'flex'; 
+            currentUserUid = user.uid; 
+            authScreen.style.display = 'none'; 
+            loader.style.display = 'flex'; 
+            
             const docSnap = await getDoc(doc(dbFirestore, "users", currentUserUid));
             if (docSnap.exists()) { 
                 window.db = docSnap.data().data; 
@@ -318,9 +330,27 @@
                 if(!window.db.targets) { window.db.targets = []; if(window.db.target && window.db.target.harga > 0) { window.db.targets.push({ id: Date.now(), ...window.db.target }); } }
                 document.getElementById('user-display-name').innerText = docSnap.data().username || "User"; 
             } else { window.db = defaultDbTemplate; await setDoc(doc(dbFirestore, "users", currentUserUid), { username: "User", data: window.db }); }
-            initAppUI(); loader.style.display = 'none'; mainApp.style.display = window.innerWidth >= 1024 ? 'flex' : 'block';
-            window.addEventListener('resize', () => { mainApp.style.display = window.innerWidth >= 1024 ? 'flex' : 'block'; });
-        } else { currentUserUid = null; window.db = null; mainApp.style.display = 'none'; loader.style.display = 'none'; authScreen.style.display = 'flex'; }
+            
+            initAppUI(); 
+            loader.style.display = 'none'; 
+            
+            // Render UI Tracker
+            mainApp.classList.add('fade-in');
+            mainApp.style.display = window.innerWidth >= 1024 ? 'flex' : 'block';
+            
+            // Fix Adaptive UI Resize Listener
+            window.addEventListener('resize', () => { 
+                if(currentUserUid) { mainApp.style.display = window.innerWidth >= 1024 ? 'flex' : 'block'; } 
+            });
+            
+        } else { 
+            // V20: Mengembalikan state logout dengan benar
+            currentUserUid = null; 
+            window.db = null; 
+            mainApp.style.display = 'none'; // Sekarang CSS tidak memiliki !important, ini akan bekerja 100%
+            loader.style.display = 'none'; 
+            authScreen.style.display = 'flex'; 
+        }
     });
 
     window.saveData = async () => { if (!currentUserUid || !window.db) return; try { await updateDoc(doc(dbFirestore, "users", currentUserUid), { data: window.db }); } catch (e) { console.error(e); } };
@@ -329,14 +359,20 @@
         const formatRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
         const cleanNum = (str) => parseInt(str.toString().replace(/\./g, ''), 10) || 0;
         const genID = () => Math.floor(Math.random() * 100000);
-        
-        // Pemasukan didaftarkan sebagai nama kantong agar history rapi
         const getPosName = (code) => ({'utama':'Utama','makan':'Makan','ops':'Ops','flex':'Flex','pemasukan':'Pendapatan Ekstra'})[code];
 
-        // FUNGSI HELPER UNTUK MENGAKSES VIRTUAL POCKET "PEMASUKAN"
-        const getBal = (p) => p === 'pemasukan' ? (window.db.pemasukan.aktif || 0) : window.db.kantong[p];
-        const deductBal = (p, a) => { if(p === 'pemasukan') window.db.pemasukan.aktif -= a; else window.db.kantong[p] -= a; };
-        const addBal = (p, a) => { if(p === 'pemasukan') window.db.pemasukan.aktif += a; else window.db.kantong[p] += a; };
+        // V20: Memastikan angka mutlak (Number) agar tidak terjadi string concatenation
+        const getBal = (p) => p === 'pemasukan' ? Number(window.db.pemasukan.aktif || 0) : Number(window.db.kantong[p] || 0);
+        const deductBal = (p, a) => { 
+            let amt = Number(a);
+            if(p === 'pemasukan') window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt); 
+            else window.db.kantong[p] = Math.max(0, (window.db.kantong[p] || 0) - amt); 
+        };
+        const addBal = (p, a) => { 
+            let amt = Number(a);
+            if(p === 'pemasukan') window.db.pemasukan.aktif = (window.db.pemasukan.aktif || 0) + amt; 
+            else window.db.kantong[p] = (window.db.kantong[p] || 0) + amt; 
+        };
 
         function setGreeting() { const hour = new Date().getHours(); let greet = 'Selamat Malam,'; if (hour >= 5 && hour < 11) greet = 'Selamat Pagi,'; else if (hour >= 11 && hour < 15) greet = 'Selamat Siang,'; else if (hour >= 15 && hour < 18) greet = 'Selamat Sore,'; document.getElementById('time-greeting').innerText = greet; }
         document.querySelectorAll('.format-rupiah').forEach(input => { input.oninput = function() { let raw = this.value.toLowerCase(); let cleanRaw = raw.replace(/[^0-9km]/g, ''); if (cleanRaw.endsWith('k')) { cleanRaw = cleanRaw.replace('k', '') + '000'; } else if (cleanRaw.endsWith('m')) { cleanRaw = cleanRaw.replace('m', '') + '000000'; } let num = parseInt(cleanRaw, 10); if (!isNaN(num)) { this.value = new Intl.NumberFormat('id-ID').format(num); } else { this.value = ''; } if(this.classList.contains('calc-trigger') && typeof calculatePlannerLive === 'function') { calculatePlannerLive(); } }; });
@@ -356,109 +392,69 @@
 
         window.eksekusiBekalPlanner = (e) => { e.preventDefault(); const totalBekal = cleanNum(document.getElementById('b-total').value); const durasi = parseInt(document.getElementById('b-durasi').value) || 7; const nabung = cleanNum(document.getElementById('b-nabung').value); const makanTotal = cleanNum(document.getElementById('b-makan').value) * durasi; const ops = cleanNum(document.getElementById('b-ops').value); const flex = totalBekal - nabung - makanTotal - ops; if (flex < 0) return alert('Invalid Configuration (Deficit)'); const k = window.db.kantong; const totalSisa = k.makan + k.ops + k.flex; window.db.cycle++; const cycleTitle = `Cycle ${window.db.cycle}`; if (totalSisa > 0) { const action = document.getElementById('action-sisa').value; let det = []; if(k.makan > 0) det.push(`Makan: ${formatRp(k.makan).replace('Rp', '').trim()}`); if(k.ops > 0) det.push(`Ops: ${formatRp(k.ops).replace('Rp', '').trim()}`); if(k.flex > 0) det.push(`Flex: ${formatRp(k.flex).replace('Rp', '').trim()}`); const strDetail = det.join(', '); if (action === 'brankas') { window.db.tabungan.aktif += totalSisa; window.db.tabungan.terkumpul += totalSisa; addHistory('Sweep to Vault', `Source: ${strDetail}`, totalSisa, 'save', 'utama'); } else { window.db.kantong.utama += totalSisa; addHistory('Rollover Balance', `Source: ${strDetail}`, totalSisa, 'in', 'utama'); } } window.db.kantong.makan = 0; window.db.kantong.ops = 0; window.db.kantong.flex = 0; window.db.kantong.utama += nabung; window.db.kantong.makan += makanTotal; window.db.kantong.ops += ops; window.db.kantong.flex += flex; addHistory(`${cycleTitle}: Vault`, `Duration ${durasi} Days`, nabung, 'in', 'utama'); addHistory(`${cycleTitle}: Food`, `Duration ${durasi} Days`, makanTotal, 'in', 'makan'); addHistory(`${cycleTitle}: Ops`, `Duration ${durasi} Days`, ops, 'in', 'ops'); if(flex > 0) addHistory(`${cycleTitle}: Flex`, 'Remaining', flex, 'in', 'flex'); finishTx(e, `Cycle Executed`); switchTab('home', document.querySelectorAll('.nav-item')[0]); checkLeftover(); };
         
-        // V19: Strict Income Isolation
         window.handleIncome = (e) => { 
-            e.preventDefault(); 
-            const desc = document.getElementById('income-desc').value; 
-            const amt = cleanNum(document.getElementById('income-amount').value); 
-            if(!amt) return; 
-            window.db.pemasukan.aktif = (window.db.pemasukan.aktif || 0) + amt; 
-            window.db.pemasukan.terkumpul += amt; 
+            e.preventDefault(); const desc = document.getElementById('income-desc').value; const amt = cleanNum(document.getElementById('income-amount').value); if(!amt) return; 
+            window.db.pemasukan.aktif = (window.db.pemasukan.aktif || 0) + amt; window.db.pemasukan.terkumpul += amt; 
             addHistory(`Inflow Ekstra: ${desc}`, `Ke Sisa Pendapatan`, amt, 'in', 'pemasukan', true); 
             finishTx(e, 'Pendapatan Disimpan Terpisah!'); 
         };
 
-        // Fallback Trigger
         document.querySelectorAll('.calc-bayar').forEach(el => { el.addEventListener('input', () => { 
-            const pos = document.getElementById('bayar-pos').value; 
-            const amt = cleanNum(document.getElementById('bayar-amount').value); 
-            const fallbackUI = document.getElementById('fallback-ui'); 
-            const fallbackSel = document.getElementById('fallback-pos'); 
-            
-            if(amt > getBal(pos)) { 
-                fallbackUI.style.display = 'block'; fallbackSel.innerHTML = ''; 
-                const pockets = {utama: 'Utama', makan: 'Makan', ops: 'Ops', flex: 'Flex', pemasukan: 'Sisa Pendapatan'}; 
-                let hasOptions = false; 
-                for(let key in pockets) { 
-                    if(key !== pos && getBal(key) > 0) { 
-                        fallbackSel.innerHTML += `<option value="${key}">${pockets[key]} (Bal: ${formatRp(getBal(key)).replace(',00','')})</option>`; 
-                        hasOptions = true; 
-                    } 
-                } 
-                if(!hasOptions) fallbackSel.innerHTML = `<option value="">Tidak ada saldo talangan</option>`; 
-            } else { fallbackUI.style.display = 'none'; } 
+            const pos = document.getElementById('bayar-pos').value; const amt = cleanNum(document.getElementById('bayar-amount').value); const fallbackUI = document.getElementById('fallback-ui'); const fallbackSel = document.getElementById('fallback-pos'); 
+            if(amt > getBal(pos)) { fallbackUI.style.display = 'block'; fallbackSel.innerHTML = ''; const pockets = {utama: 'Utama', makan: 'Makan', ops: 'Ops', flex: 'Flex', pemasukan: 'Sisa Pendapatan'}; let hasOptions = false; for(let key in pockets) { if(key !== pos && getBal(key) > 0) { fallbackSel.innerHTML += `<option value="${key}">${pockets[key]} (Bal: ${formatRp(getBal(key)).replace(',00','')})</option>`; hasOptions = true; } } if(!hasOptions) fallbackSel.innerHTML = `<option value="">Tidak ada saldo talangan</option>`; } else { fallbackUI.style.display = 'none'; } 
         }); });
 
-        // V19: Payment Outflow
         window.handleBayar = (e) => { 
-            e.preventDefault(); 
-            const desc = document.getElementById('bayar-desc').value; 
-            const pos = document.getElementById('bayar-pos').value; 
-            const amt = cleanNum(document.getElementById('bayar-amount').value); 
-            if(!amt) return; 
-            
-            if(amt > getBal(pos)) { 
-                const fallbackPos = document.getElementById('fallback-pos').value; 
-                if(!fallbackPos) return alert("System Failed: Saldo tidak cukup."); 
-                const shortfall = amt - getBal(pos); 
-                if(getBal(fallbackPos) < shortfall) return alert(`System Failed: Saldo talangan kurang.`); 
-                
-                const amt1 = getBal(pos); 
-                deductBal(pos, amt1); 
-                deductBal(fallbackPos, shortfall); 
-                
-                if(amt1 > 0) addHistory(`Outflow: ${desc}`, `Drained from ${getPosName(pos)}`, amt1, 'out', pos); 
-                addHistory(`Outflow: ${desc} (Split)`, `Fallback from ${getPosName(fallbackPos)}`, shortfall, 'out', fallbackPos); 
-                document.getElementById('fallback-ui').style.display = 'none'; 
-                finishTx(e, 'Split Payment Processed'); 
-            } else { 
-                deductBal(pos, amt); 
-                addHistory(`Outflow: ${desc}`, `From ${getPosName(pos)}`, amt, 'out', pos); 
-                finishTx(e, 'Payment Processed'); 
-            } 
+            e.preventDefault(); const desc = document.getElementById('bayar-desc').value; const pos = document.getElementById('bayar-pos').value; const amt = cleanNum(document.getElementById('bayar-amount').value); if(!amt) return; 
+            if(amt > getBal(pos)) { const fallbackPos = document.getElementById('fallback-pos').value; if(!fallbackPos) return alert("System Failed: Saldo tidak cukup."); const shortfall = amt - getBal(pos); if(getBal(fallbackPos) < shortfall) return alert(`System Failed: Saldo talangan kurang.`); const amt1 = getBal(pos); deductBal(pos, amt1); deductBal(fallbackPos, shortfall); if(amt1 > 0) addHistory(`Outflow: ${desc}`, `Drained from ${getPosName(pos)}`, amt1, 'out', pos); addHistory(`Outflow: ${desc} (Split)`, `Fallback from ${getPosName(fallbackPos)}`, shortfall, 'out', fallbackPos); document.getElementById('fallback-ui').style.display = 'none'; finishTx(e, 'Split Payment Processed'); } else { deductBal(pos, amt); addHistory(`Outflow: ${desc}`, `From ${getPosName(pos)}`, amt, 'out', pos); finishTx(e, 'Payment Processed'); } 
         };
 
-        // V19: Vault Deposit
         window.handleNabung = (e) => { 
-            e.preventDefault(); 
-            const pos = document.getElementById('nabung-pos').value; 
-            const amt = cleanNum(document.getElementById('nabung-amount').value); 
-            if(!amt) return; 
-            
-            if(getBal(pos) < amt) return alert('Saldo tidak cukup.'); 
-            deductBal(pos, amt); 
-            window.db.tabungan.aktif += amt; 
-            window.db.tabungan.terkumpul += amt; 
-            addHistory('Vault Deposit', `From ${getPosName(pos)}`, amt, 'save', pos); 
-            finishTx(e, 'Deposited'); 
+            e.preventDefault(); const pos = document.getElementById('nabung-pos').value; const amt = cleanNum(document.getElementById('nabung-amount').value); if(!amt) return; 
+            if(getBal(pos) < amt) return alert('Saldo tidak cukup.'); deductBal(pos, amt); window.db.tabungan.aktif += amt; window.db.tabungan.terkumpul += amt; addHistory('Vault Deposit', `From ${getPosName(pos)}`, amt, 'save', pos); finishTx(e, 'Deposited'); 
         };
 
         window.handleTarik = (e) => { e.preventDefault(); const amt = cleanNum(document.getElementById('tarik-amount').value); if(!amt) return; if(window.db.tabungan.aktif < amt) return alert('Insufficient vault balance.'); window.db.tabungan.aktif -= amt; window.db.tabungan.terpakai += amt; window.db.kantong.utama += amt; addHistory(`Withdrawal: ${document.getElementById('tarik-desc').value}`, 'To Dompet Utama', amt, 'withdraw', 'utama'); finishTx(e, 'Withdrawn'); };
         function finishTx(e, msg) { window.saveData(); renderHome(); e.target.reset(); closeSheets(); showToast(msg); }
         function addHistory(title, sub, amount, type, pocketId, isIncomeExtra = false) { const now = new Date(); const dateGroup = now.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); window.db.history.unshift({ id: genID(), title, sub, amount, type, pocketId, isIncomeExtra, date: now.toLocaleDateString('id-ID', {day:'numeric', month:'short'}), time: now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}), groupId: dateGroup }); }
         
-        // V19: Revert Logic Updates
+        // V20: Revert Logic Updates (100% Number enforcement & Bugfix)
         window.undoTx = (id) => { 
             if(!confirm('Revert transaction from Cloud?')) return; 
             const index = window.db.history.findIndex(t => t.id === id); if(index === -1) return; 
             const t = window.db.history[index]; 
+            const amt = Number(t.amount); // Paksa ke format angka absolut!
             
             if(t.type === 'in') { 
-                if (t.pocketId === 'pemasukan') { window.db.pemasukan.aktif -= t.amount; window.db.pemasukan.terkumpul -= t.amount; } 
-                else { window.db.kantong[t.pocketId] -= t.amount; }
+                if (t.pocketId === 'pemasukan') { 
+                    window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt); 
+                    window.db.pemasukan.terkumpul = Math.max(0, (window.db.pemasukan.terkumpul || 0) - amt); 
+                } else { 
+                    deductBal(t.pocketId, amt);
+                    // Handle legacy data dari V18 yang mungkin menyasar
+                    if(t.isIncomeExtra) {
+                        window.db.pemasukan.aktif = Math.max(0, (window.db.pemasukan.aktif || 0) - amt); 
+                    }
+                }
             } else if (t.type === 'out') { 
-                addBal(t.pocketId, t.amount); 
+                addBal(t.pocketId, amt); 
             } else if (t.type === 'save') { 
-                addBal(t.pocketId, t.amount); window.db.tabungan.aktif -= t.amount; window.db.tabungan.terkumpul -= t.amount; 
+                addBal(t.pocketId, amt); 
+                window.db.tabungan.aktif = Math.max(0, window.db.tabungan.aktif - amt); 
+                window.db.tabungan.terkumpul = Math.max(0, window.db.tabungan.terkumpul - amt); 
             } else if (t.type === 'withdraw') { 
-                window.db.tabungan.aktif += t.amount; window.db.tabungan.terpakai -= t.amount; window.db.kantong.utama -= t.amount; 
+                window.db.tabungan.aktif += amt; 
+                window.db.tabungan.terpakai = Math.max(0, window.db.tabungan.terpakai - amt); 
+                deductBal('utama', amt); 
             } 
-            window.db.history.splice(index, 1); window.saveData(); renderHome(); renderTimeline(); showToast('Reverted'); 
+            
+            window.db.history.splice(index, 1); 
+            window.saveData(); renderHome(); renderTimeline(); showToast('Reverted Berhasil'); 
         };
 
         function renderHome() { 
             const k = window.db.kantong; 
-            document.getElementById('total-bekal').innerText = formatRp(k.makan + k.ops + k.flex + k.utama); // V19: Murni Bekal
+            document.getElementById('total-bekal').innerText = formatRp(k.makan + k.ops + k.flex + k.utama); 
             document.getElementById('pemasukan-ekstra').innerText = formatRp(window.db.pemasukan.aktif || 0); 
             document.getElementById('tabungan-aktif').innerText = formatRp(window.db.tabungan.aktif); 
             document.getElementById('k-utama').innerText = formatRp(k.utama); 
